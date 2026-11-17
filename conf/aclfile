@@ -1,0 +1,28 @@
+# JOUR 3 : controle d'acces (ACL) Mosquitto.
+# Principe du moindre privilege : chaque appareil n'a que les droits dont il a besoin.
+# Tout ce qui n'est pas autorise ici est refuse.
+
+# Capteurs : publier uniquement sur leur propre topic, ne rien lire
+user temp_sensor
+topic write /farm/temperature
+
+user hum_sensor
+topic write /farm/humidity
+
+# Controleur : lire les capteurs, publier les commandes
+user controller
+topic read /farm/temperature
+topic read /farm/humidity
+topic write /farm/commands/ventilation
+topic write /farm/commands/irrigation
+
+# Actionneurs : lire uniquement leur propre commande, ne rien ecrire
+user ventilation
+topic read /farm/commands/ventilation
+
+user irrigation
+topic read /farm/commands/irrigation
+
+# Monitoring : lecture seule de tout /farm/
+user monitor
+topic read /farm/#
